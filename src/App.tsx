@@ -1,26 +1,75 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import CodeTypewriter from "./animatedSnippet";
 
-function App() {
+export default function App() {
+  const codeSteps = [
+    {
+      step: 1,
+      code: `function DisplayName `,
+      type: "interactive",
+      audio: "",
+      interactive: {
+        correct: 0,
+        options: [
+          `function keyword function name`,
+          `function name function keyword`,
+        ],
+        question: "How do we tell js we want to create a named function?",
+      },
+    },
+    {
+      step: 2,
+      type: "interactive",
+      audio: "",
+      code: `( { name , age } ) {`,
+      interactive: {
+        correct: 0,
+        options: [`({ propname })`, `([ propname ])`, `(propname)`],
+        question: "How do we allow for arguments to be passed to a function?",
+      },
+    },
+    {
+      step: 3,
+      type: "interactive",
+      audio: "",
+      code: `   \n   return`,
+      interactive: {
+        correct: 0,
+        options: [`return`, `visualise`, `render`],
+        question:
+          "How do we turn a function into a component that can render jsx?",
+      },
+    },
+    {
+      step: 4,
+      type: "interactive",
+      audio: "",
+      code: ` ( \n    <div> \n      hello \n    </div> \n   ) \n }`,
+      interactive: {
+        correct: 2,
+        options: [`[ ]`, `{ }`, `( )`],
+        question: "How do we open and close jsx for a component?",
+      },
+    },
+    {
+      step: 5,
+      type: "interactive",
+      audio: "",
+      code: " \n \n export default DisplayName;",
+      interactive: {
+        correct: 1,
+        options: [
+          `export function DisplayName`,
+          `export default function DisplayName;`,
+        ],
+        question: "How do we export this component to use elsewhere?",
+      },
+    },
+  ];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CodeTypewriter codeSteps={codeSteps} typingSpeed={45} />
+      <CodeTypewriter codeSteps={codeSteps} typingSpeed={75} />
     </div>
   );
 }
-
-export default App;
