@@ -16,14 +16,21 @@ This project provides an interactive and animated code learning experience using
 - **Customizable Code Steps**: Each step of the coding challenge is fully customizable, allowing for different types of questions, code snippets, and interaction.
 - **Smooth Animations**: Uses `framer-motion` for smooth transitions and animations, enhancing the user experience.
 
+## to implement 
+- ** type: 'highlight' that highlights a portion and skips to the next stage when audio is complete.
+- ** blocks that can be injected at certain positions / indexes.
+- ** blocks that can be edited and be reflected in a live version.
+- ** at the end, give an option to try coding it all yourself, then see both the final and tried version.
+- ** generate the codesteps dynamically by creating new steps in a ui with a textarea to write the next code. I'll need to figure out formatting so code injected has the correct spacing.
+
 ## Installation
 
 To get started with this project, you need to clone the repository and install the dependencies.
 
 ```javascript
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+git clone https://github.com/codedevbrad/animated-code-snippet.git
 npm install
+npm run start
 ```
 
 ## Implementing the Animated snippet
