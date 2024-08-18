@@ -98,7 +98,7 @@ const NextButton = ({ onClick, isDisabled }) => {
 };
 
 // CompletedButton Component
-const CompletedButton = ({ onClick }) => {
+const CompletedButton = ({ completedText = "Retry the challenge!" , onClick }) => {
   return (
     <motion.button
       initial={{ opacity: 0 }}
@@ -107,7 +107,7 @@ const CompletedButton = ({ onClick }) => {
       onClick={onClick}
       className="bg-black text-white px-4 py-2 rounded-xl"
     >
-      Retry the challenge!
+        { completedText }
     </motion.button>
   );
 };
@@ -157,7 +157,8 @@ const OptionsDisplay = ({
   );
 };
 
-const CodeTypewriter = ({ codeSteps, typingSpeed = 50 }) => {
+
+const CodeTypewriter = ({ codeSteps, typingSpeed = 50, isShowcaseMode = false }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [displayedCode, setDisplayedCode] = useState("");
   const [typingIndex, setTypingIndex] = useState(0);
@@ -178,20 +179,31 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50 }) => {
     } else if (typingIndex === codeToType.length) {
       setIsTyping(false); // Stop typing when the current code is fully typed out
 
-      // Ensure code is rendered before moving to the next step
-      if (
-        currentStep < codeSteps.length &&
-        (codeSteps[currentStep - 1]?.interactive === undefined ||
-          selectedOption === codeSteps[currentStep - 1]?.interactive?.correct)
-      ) {
-        const timeoutId = setTimeout(() => {
-          handleNextStep(); // Move to the next step after a small delay
-        }, 1000); // Adjust delay as needed
-        return () => clearTimeout(timeoutId);
-      }
+      if (isShowcaseMode) {
+        if (currentStep < codeSteps.length) {
+          const timeoutId = setTimeout(() => {
+            handleNextStep(); // Automatically move to the next step in showcase mode
+          }, 1000); // Adjust delay as needed
+          return () => clearTimeout(timeoutId);
+        } else {
+          setIsCompleted(true); // Mark as completed when all steps are done in showcase mode
+        }
+      } else {
+        // Ensure code is rendered before moving to the next step
+        if (
+          currentStep < codeSteps.length &&
+          (codeSteps[currentStep - 1]?.interactive === undefined ||
+            selectedOption === codeSteps[currentStep - 1]?.interactive?.correct)
+        ) {
+          const timeoutId = setTimeout(() => {
+            handleNextStep(); // Move to the next step after a small delay
+          }, 1000); // Adjust delay as needed
+          return () => clearTimeout(timeoutId);
+        }
 
-      if (currentStep === codeSteps.length) {
-        setIsCompleted(true); // Mark as completed when all steps are done
+        if (currentStep === codeSteps.length) {
+          setIsCompleted(true); // Mark as completed when all steps are done
+        }
       }
     }
   }, [
@@ -201,6 +213,7 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50 }) => {
     selectedOption,
     codeSteps,
     typingSpeed,
+    isShowcaseMode,
   ]);
 
   const handleNextStep = () => {
@@ -235,14 +248,14 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50 }) => {
   };
 
   useEffect(() => {
-    if (!codeSteps[currentStep - 1].interactive) {
-      setIsTyping(true); // Automatically start typing if no interactive options are present
+    if (!codeSteps[currentStep - 1].interactive || isShowcaseMode) {
+      setIsTyping(true); // Automatically start typing if no interactive options are present or in showcase mode
     }
-  }, [currentStep, codeSteps]);
+  }, [currentStep, codeSteps, isShowcaseMode]);
 
   return (
     <div className="flex flex-col items-center space-y-4 m-5 bg-gray-200 py-8 p-5 rounded-xl">
-      {!isCompleted && codeSteps[currentStep - 1]?.interactive?.question && (
+      {!isCompleted && codeSteps[currentStep - 1]?.interactive?.question && !isShowcaseMode && (
         <motion.h2
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -260,7 +273,7 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50 }) => {
           transition={{ duration: 1.5 }}
           className="text-lg font-semibold text-black"
         >
-          Awesome, you've completed this challenge
+          { !isShowcaseMode ? `Awesome, you've completed this challenge` : null }
         </motion.h2>
       )}
 
@@ -269,7 +282,7 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50 }) => {
         <CodeDisplay displayedCode={displayedCode} />
       </div>
 
-      {!isCompleted && codeSteps[currentStep - 1]?.interactive && (
+      {!isCompleted && codeSteps[currentStep - 1]?.interactive && !isShowcaseMode && (
         <OptionsDisplay
           options={codeSteps[currentStep - 1].interactive.options}
           onSelectOption={handleSelectOption}
@@ -282,13 +295,13 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50 }) => {
       <div className="flex space-x-4">
         {!isTyping &&
           !isCompleted &&
-          !codeSteps[currentStep - 1]?.interactive && (
+          !codeSteps[currentStep - 1]?.interactive && !isShowcaseMode && (
             <NextButton
               onClick={handleNextStep}
               isDisabled={currentStep === codeSteps.length}
             />
           )}
-        {isCompleted && <CompletedButton onClick={handleReset} />}
+        {isCompleted && <CompletedButton onClick={handleReset} completedText={ isShowcaseMode ? 'View again' : 'Redo Challenge' } />}
       </div>
     </div>
   );

@@ -43,7 +43,7 @@ export default function App() {
       step: 4,
       type: "interactive",
       audio: "",
-      code: ` ( \n    <div> \n      hello \n    </div> \n   ) \n }`,
+      code: ` ( \n    <div> \n      { name } \n    </div> \n   ) \n }`,
       interactive: {
         correct: 2,
         options: [`[ ]`, `{ }`, `( )`],
@@ -68,7 +68,7 @@ export default function App() {
 
   return (
     <div>
-      <CodeTypewriter codeSteps={codeSteps} typingSpeed={45} />
+      <CodeTypewriter codeSteps={codeSteps} typingSpeed={45} isShowcaseMode={ true } />
       <CodeTypewriter codeSteps={codeSteps} typingSpeed={75} />
     </div>
   );
