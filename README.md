@@ -26,6 +26,8 @@ cd your-repo
 npm install
 ```
 
+## Implementing the Animated snippet
+
 ```javascript
 import CodeTypewriter from "./animatedSnippet";
 
