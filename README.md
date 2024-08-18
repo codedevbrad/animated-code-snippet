@@ -1,7 +1,7 @@
 # Animated code snippet challenges
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/cfdbc51d-5337-4be5-8f0c-3214faed20af" alt="Animated code snippet challenges" width="900" height="420" />
+  <img src="https://github.com/user-attachments/assets/22cbdbc7-8fde-468e-8fcb-eebf4a81a66a" alt="Animated code snippet challenges" width="900" height="420" />
 </div>
 
 <br />
