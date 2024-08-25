@@ -1,24 +1,19 @@
 // @ts-nocheck
-
 import React, { useState, useEffect } from "react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import theme from "prism-react-renderer/themes/nightOwl";
 import { motion } from "framer-motion";
 
-
 /*
 ** to add : ** 
   * type: 'highlight' that highlights a portion and skips to the next stage when audio is complete.
-
   * blocks that can be injected at certain positions / indexes.
-
   * blocks that can be edited and be reflected in a live version.
-
   * at the end, give an option to try coding it all yourself, then see both the final and tried version.
 */
 
 
-// EditorHeader Component
+// EditorHeader Component.
 const EditorHeader = () => {
   return (
     <motion.div
@@ -37,51 +32,8 @@ const EditorHeader = () => {
   );
 };
 
-// CodeDisplay Component
-const CodeDisplay = ({ displayedCode }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="bg-gray-900 text-green-400 p-4 rounded-b-lg"
-      style={{ backgroundColor: "transparent" }}
-    >
-      <Highlight
-        {...defaultProps}
-        theme={theme}
-        code={displayedCode}
-        language="jsx"
-        style={{ backgroundColor: "transparent", padding: 0 }}
-      >
-        {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <motion.pre
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className={`${className} pl-8 relative`}
-            style={{ ...style, backgroundColor: "transparent", padding: 0 }}
-          >
-            {tokens.map((line, i) => (
-              <div
-                key={i}
-                {...getLineProps({ line, key: i })}
-                className="relative"
-              >
-                <span className="text-gray-600 mr-3">{i + 1}</span>
-                {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
-                ))}
-              </div>
-            ))}
-          </motion.pre>
-        )}
-      </Highlight>
-    </motion.div>
-  );
-};
 
-// NextButton Component
+// NextButton Component.
 const NextButton = ({ onClick, isDisabled }) => {
   return (
     <motion.button
@@ -97,7 +49,7 @@ const NextButton = ({ onClick, isDisabled }) => {
   );
 };
 
-// CompletedButton Component
+// CompletedButton Component.
 const CompletedButton = ({ completedText = "Retry the challenge!" , onClick }) => {
   return (
     <motion.button
@@ -112,7 +64,7 @@ const CompletedButton = ({ completedText = "Retry the challenge!" , onClick }) =
   );
 };
 
-// OptionsDisplay Component
+// OptionsDisplay Component.
 const OptionsDisplay = ({
   options,
   onSelectOption,
@@ -157,7 +109,53 @@ const OptionsDisplay = ({
   );
 };
 
+// CodeDisplay Component...
+/* possible error on line 69 to 73 adding span around line.map */
+export const CodeDisplay = ({ displayedCode }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="bg-gray-900 text-green-400 p-4 rounded-b-lg"
+      style={{ backgroundColor: "transparent" }}
+    >
+      <Highlight
+        {...defaultProps}
+        theme={theme}
+        code={displayedCode}
+        language="jsx"
+        style={{ backgroundColor: "transparent", padding: 0 }}
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <motion.pre
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className={`${className} pl-8 relative`}
+            style={{ ...style, backgroundColor: "transparent", padding: 0 }}
+          >
+           
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line, key: i })} className="relative" >
+                <span className="text-gray-600 mr-3"contentEditable={false}>
+                  {i + 1}
+                </span>
+                <span>
+                   {line.map((token, key) => (
+                    <span key={key} {...getTokenProps({ token, key })} />
+                  ))}
+                </span>
+              </div>
+            ))}
+          </motion.pre>
+        )}
+      </Highlight>
+    </motion.div>
+  );
+};
 
+// CodeTypeWriter.
 const CodeTypewriter = ({ codeSteps, typingSpeed = 50, isShowcaseMode = false }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [displayedCode, setDisplayedCode] = useState("");
@@ -170,13 +168,16 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50, isShowcaseMode = false })
   useEffect(() => {
     const codeToType = codeSteps[currentStep - 1].code;
 
+    console.log( codeToType , 'typing...');
+;
     if (typingIndex < codeToType.length && isTyping) {
       const timeoutId = setTimeout(() => {
         setDisplayedCode(prev => prev + codeToType[typingIndex]);
         setTypingIndex(prev => prev + 1);
       }, typingSpeed);
       return () => clearTimeout(timeoutId);
-    } else if (typingIndex === codeToType.length) {
+    } 
+    else if (typingIndex === codeToType.length) {
       setIsTyping(false); // Stop typing when the current code is fully typed out
 
       if (isShowcaseMode) {
@@ -188,7 +189,8 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50, isShowcaseMode = false })
         } else {
           setIsCompleted(true); // Mark as completed when all steps are done in showcase mode
         }
-      } else {
+      } 
+      else {
         // Ensure code is rendered before moving to the next step
         if (
           currentStep < codeSteps.length &&
@@ -212,8 +214,6 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50, isShowcaseMode = false })
     isTyping,
     selectedOption,
     codeSteps,
-    typingSpeed,
-    isShowcaseMode,
   ]);
 
   const handleNextStep = () => {
@@ -282,6 +282,7 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50, isShowcaseMode = false })
         <CodeDisplay displayedCode={displayedCode} />
       </div>
 
+
       {!isCompleted && codeSteps[currentStep - 1]?.interactive && !isShowcaseMode && (
         <OptionsDisplay
           options={codeSteps[currentStep - 1].interactive.options}
@@ -306,5 +307,6 @@ const CodeTypewriter = ({ codeSteps, typingSpeed = 50, isShowcaseMode = false })
     </div>
   );
 };
+
 
 export default CodeTypewriter;
